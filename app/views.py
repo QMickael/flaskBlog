@@ -1,8 +1,13 @@
 from flask import Flask, render_template, redirect, request
+from flask.ext.sqlalchemy import SQLAlchemy
 import config
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
+
+db = SQLAlchemy(app)
+
+from models import *
 
 @app.route('/')
 def index():
@@ -10,4 +15,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
