@@ -1,4 +1,4 @@
-from views import db
+from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 
@@ -9,15 +9,18 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(25))
-    registered_on = db.Column(db.DateTime)
+    registered_on = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    is_staff = db.Column(db.Integer(), default=0)
+    is_moderator = db.Column(db.Integer, default=0)
     is_auth = db.Column(db.Integer(), default=0)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
-    def __init__(self, username, email, password, registered_on, is_auth):
+    def __init__(self, username, email, password, is_staff, is_moderator, is_auth):
         self.username = username
         self.email = email
         self.set_password(password)
-        self.registered_on = datetime.utcnow()
+        self.is_staff = is_staff
+        self.is_moderator = is_moderator
         self.is_auth = is_auth
 
     def set_password(self, password):
@@ -26,9 +29,6 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.pw_hash, password)
 
-    def __repr__(self):
-        return '<User %r>' % (self.username)
-
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -36,16 +36,12 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     body = db.Column(db.Text())
-    timestamp = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, title, body, timestamp):
+    def __init__(self, title, body):
         self.title = title
         self.body = body
-        self.timestamp = datetime.utcnow()
-
-    def __repr__(self):
-        return '<Post %r>' % (self.title)
 
 
 class Comment(db.Model):
@@ -53,12 +49,8 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text())
-    timestamp = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, body, timestamp):
+    def __init__(self, body):
         self.body = body
-        self.timestamp = datetime.utcnow()
-
-    def __repr__(self):
-        return '<Comment %r>' % (self.title)
