@@ -30,6 +30,16 @@ class User(db.Model):
         return check_password_hash(self.pw_hash, password)
 
 
+class PostType(db.Model):
+    __tablename__ = 'postsType'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60))
+
+    def __init__(self, name):
+        self.name = name
+
+
 class Post(db.Model):
     __tablename__ = 'posts'
 
@@ -38,10 +48,12 @@ class Post(db.Model):
     body = db.Column(db.Text())
     timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
+    post_type = db.Column(db.Integer, db.ForeignKey('postsType.id'))
     def __init__(self, title, body):
         self.title = title
         self.body = body
+
+
 
 
 class Comment(db.Model):
