@@ -7,11 +7,13 @@ app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 db = SQLAlchemy(app)
 
-from models import *
+import models
+import api
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    user = api.User().get(1)
+    return render_template('index.html', user=user)
 
 @app.route('/admin')
 def admin():

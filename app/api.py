@@ -3,36 +3,55 @@ from app import db
 import models
 
 
-class PostType():
-    def get(self, username):
-        post_type = models.PostType.query.filter_by(name=name).first()
-        if post_type:
-            return post_type
+class Post():
+    def get(self, id):
+        post = models.Post.query.filter_by(id=id).first()
+        if post:
+            return post.id
         else:
-            return 'Category does not exist'
+            return 'Post does not exist'
 
-    def post(self, name):
-        post_type = models.PostType.query.filter_by(name=name).first()
+    def post(self, user_id, post_type, title, content):
+        author = models.User.query.get(user_id)
+        post = models.Post(title=title, content=content, post_type=post_type, author=author)
 
-        if post_type is not None:
-            return 'Category is already use.'
+        db.session.add(post)
+        db.session.commit()
 
+    def patch(self):
+        pass
+
+    def delete(self, id):
+        post = models.Post.query.filter_by(id=id).first()
+        if post:
+            db.session.delete(post)
+            db.session.commit()
         else:
-            post_type = models.PostType(name=name)
+            return 'Post does not exist'
 
-            db.session.add(post_type)
+
+class Comment():
+    def get(self, id):
+        comment = models.Comment.query.filter_by(id=id).first()
+        if comment:
+            return comment
+        else:
+            return 'Comment does not exist'
+
+    def post(self, author, content):
+            comment = models.Comment(author=author, content=content)
+
+            db.session.add(comment)
             db.session.commit()
 
     def patch(self):
         pass
 
-    def delete(self, username):
-        post_type = models.PostType.query.filter_by(name=name).first()
-        if post_type:
-            db.session.delete(post_type)
-            db.session.commit()
-        else:
-            return 'Category does not exist'
+    def delete(self, id):
+        comment = models.Comment.query.filter_by(id=id)
+        db.session.delete(comment)
+        db.session.commit()
+
 
 class User():
     def get(self, username):
@@ -54,11 +73,8 @@ class User():
 
         else:
             user = models.User(username=username,
-                        email=email,
-                        password=password,
-                        is_staff=0,
-                        is_moderator=0,
-                        is_auth=0)
+                                email=email,
+                                password=password)
             db.session.add(user)
             db.session.commit()
 
