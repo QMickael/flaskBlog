@@ -18,11 +18,17 @@ def index():
     posts = api.Post().get_all()
     return render_template('index.html', user=user, posts=posts)
 
+@app.route('/post/<int:post_id>')
+def display_post(post_id):
+    post = api.Post().get(post_id)
+    comments = api.Comment().get_all(post_id)
+    return render_template('post.html', post=post, comments=comments)
+
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     form = PostForm(request.form)
     if request.method == 'POST' and form.validate():
-        post = api.Post().post(user_id='admin',
+        post = api.Post().post(user_id=1,
                                 title=form.title.data,
                                 content=form.content.data,
                                 post_type=form.post_type.data)

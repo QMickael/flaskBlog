@@ -7,7 +7,7 @@ class Post():
     def get(self, id):
         post = models.Post.query.filter_by(id=id).first()
         if post:
-            return post.id
+            return post
         else:
             return 'Post does not exist'
 
@@ -41,6 +41,10 @@ class Comment():
             return comment
         else:
             return 'Comment does not exist'
+
+    def get_all(self, post_id):
+        comments = models.Comment.query.filter_by(post_id=post_id)
+        return comments        
 
     def post(self, author, content):
             comment = models.Comment(author=author, content=content)

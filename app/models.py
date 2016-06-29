@@ -14,7 +14,7 @@ class User(db.Model):
     is_moderator = db.Column(db.Integer, default=0)
     is_auth = db.Column(db.Integer(), default=0)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    comments = db.relationship('Comment', backref='user_comment', lazy='dynamic')
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, username, email, password):
         self.username = username
@@ -54,9 +54,9 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
     content = db.Column(db.Text(), nullable=False)
     created_on = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
-    author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, post_id, content, author):
+    def __init__(self, post_id, content, user_id):
         self.content = content
-        self.author = author
+        self.user_id = user_id
         self.post_id = post_id
