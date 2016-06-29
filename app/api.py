@@ -11,9 +11,13 @@ class Post():
         else:
             return 'Post does not exist'
 
+    def get_all(self):
+        posts = models.Post.query.all()
+        return posts
+
     def post(self, user_id, post_type, title, content):
         author = models.User.query.get(user_id)
-        post = models.Post(title=title, content=content, post_type=post_type, author=author)
+        post = models.Post(title=title, content=content, post_type=post_type, user_id=user_id)
 
         db.session.add(post)
         db.session.commit()

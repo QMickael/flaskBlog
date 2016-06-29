@@ -13,7 +13,7 @@ class User(db.Model):
     is_staff = db.Column(db.Integer(), default=0)
     is_moderator = db.Column(db.Integer, default=0)
     is_auth = db.Column(db.Integer(), default=0)
-    posts = db.relationship('Post', backref='user', lazy='dynamic')
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='user_comment', lazy='dynamic')
 
     def __init__(self, username, email, password):
@@ -32,7 +32,7 @@ class Post(db.Model):
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_on = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
@@ -40,9 +40,9 @@ class Post(db.Model):
     modified = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
     post_type = db.Column(db.String(20), nullable=False)
 
-    def __init__(self, title, content, author, post_type):
+    def __init__(self, title, content, user_id, post_type):
         self.title = title
-        self.author = author
+        self.user_id = user_id
         self.content = content
         self.post_type = post_type
 
