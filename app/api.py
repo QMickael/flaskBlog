@@ -44,10 +44,10 @@ class Comment():
 
     def get_all(self, post_id):
         comments = models.Comment.query.filter_by(post_id=post_id)
-        return comments        
+        return comments
 
-    def post(self, author, content):
-            comment = models.Comment(author=author, content=content)
+    def post(self, user_id, content, post_id):
+            comment = models.Comment(user_id=user_id, content=content, post_id=post_id)
 
             db.session.add(comment)
             db.session.commit()
@@ -62,6 +62,10 @@ class Comment():
 
 
 class User():
+    def get_by_id(self, id):
+        user = models.User.query.get(id)
+        return user
+
     def get(self, username):
         user = models.User.query.filter_by(username=username).first()
         if user:

@@ -1,17 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="post">
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.author.username }}</p>
-    <p>{{ post.content }}</p>
-    <p>{{ post.created_on }}</p>
-</div>
+    <div class="post">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.author.username }}</p>
+        <p>{{ post.content }}</p>
+        <p>{{ post.created_on }}</p>
+    </div>
 
-{% for comment in comments %}
-<div class="comment">
-    <p>{{ comment.author.username }}
-    <p>{{ comment.content }}
-    <p>{{ comment.created_on }}
-</div>
-{% endfor %}
+    {% for comment in comments %}
+        <div class="comment">
+            <p>{{ comment.author.username }}
+            <p>{{ comment.content }}
+            <p>{{ comment.created_on }}
+        </div>
+    {% endfor %}
+    <div class="comment">
+        {% from "_formhelper.html" import render_field %}
+        <form method="post" action="">
+            {{ render_field(form.content) }}
+            <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
+    </div>
 {% endblock %}
+<script>
+    $('button').click(function(){
+        window.location.reload();
+    });
+</script>

@@ -8,11 +8,11 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
     email = db.Column(db.String(50), unique=True)
-    pw_hash = db.Column(db.String(25))
+    pw_hash = db.Column(db.String(25), nullable=False)
     registered_on = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     is_staff = db.Column(db.Integer(), default=0)
     is_moderator = db.Column(db.Integer, default=0)
-    is_auth = db.Column(db.Integer(), default=0)
+    is_auth = db.Column(db.Integer, default=0)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
@@ -38,13 +38,23 @@ class Post(db.Model):
     created_on = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     modified = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
-    post_type = db.Column(db.String(20), nullable=False)
+    category = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
-    def __init__(self, title, content, user_id, post_type):
+    def __init__(self, title, content, user_id, category):
         self.title = title
         self.user_id = user_id
         self.content = content
-        self.post_type = post_type
+        self.category = category
+
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+
+    def __init__(self, name):
+        self.name = name
 
 
 class Comment(db.Model):

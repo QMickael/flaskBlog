@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for post in posts %}
-<div class="post">
-    <a href="{{ url_for('display_post', post_id=post.id) }}"><h2>{{ post.title }}</h2></a>
-    <p>{{ post.author.username }}</p>
-    <p>{{ post.content }}</p>
-    <p>{{ post.created_on }}</p>
-</div>
-{% endfor %}
+    {% for post in posts %}
+        <div class="post">
+            <div class="rows">
+                <div class="col-md-12">
+                    <div class="col-md-8">
+                        <a href="{{ url_for('display_post', post_id=post.id) }}"><h2>{{ post.title }}</h2></a>
+                    </div>
+                    <div class="col-md-4" id="post-author">
+                        <p><b>author :</b> {{ post.author.username }}</p>
+                    </div>
+                </div>
+                <div class="col-md-12" id="post-content">
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="col-md-12" id="post-published">
+                    <p><b>published :</b>{{ post.created_on }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
