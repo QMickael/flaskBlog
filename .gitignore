@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 .idea/
+=======
+>>>>>>> 1c0f406646b0c0631778c0ad9dedf6fd2043fa02
 *.pyc
 __pycache__
 migrations/
+db.sqlite3
