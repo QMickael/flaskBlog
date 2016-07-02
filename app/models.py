@@ -1,18 +1,28 @@
 from app import db
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_security import UserMixin, RoleMixin
+from flask_security.utils import encrypt_password
 import datetime
 
-class User(db.Model):
+# Define models
+roles_users = db.Table(
+    'roles_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('users.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('roles.id'))
+)
+
+
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
     email = db.Column(db.String(50), unique=True)
-    pw_hash = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    is_staff = db.Column(db.Integer(), default=0)
-    is_moderator = db.Column(db.Integer, default=0)
-    is_auth = db.Column(db.Integer, default=0)
+    is_staff = db.Column(db.Boolean)
+    is_moderator = db.Column(db.Boolean)
+    active = db.Column(db.Boolean)
+    role = db.relationship('Role', secondary=roles_users, backref='users', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
@@ -21,11 +31,23 @@ class User(db.Model):
         self.email = email
         self.set_password(password)
 
-    def set_password(self, password):
-        self.pw_hash = generate_password_hash(password)
+    def set_password(self, password_hash):
+        self.password = encrypt_password(password_hash)
 
-    def check_password(self, password):
-        return check_password_hash(self.pw_hash, password)
+    #def check_password(self, password_hash):
+    #    return bcrypt.check_password_hash(self.password, password_hash)
+
+
+class Role(db.Model, RoleMixin):
+    __tablename__ = 'roles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40), unique=True)
+    description = db.Column(db.String(255))
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
 
 
 class Post(db.Model):
