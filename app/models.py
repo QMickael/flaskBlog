@@ -10,9 +10,9 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True)
     pw_hash = db.Column(db.String(25), nullable=False)
     registered_on = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    is_staff = db.Column(db.Integer(), default=0)
-    is_moderator = db.Column(db.Integer, default=0)
-    is_auth = db.Column(db.Integer, default=0)
+    is_staff = db.Column(db.Boolean)
+    is_moderator = db.Column(db.Boolean)
+    is_auth = db.Column(db.Boolean)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 

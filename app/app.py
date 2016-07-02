@@ -10,13 +10,20 @@ app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 db = SQLAlchemy(app)
 
-import models
 import api
+import models
 
+# Admin settings models
+admin = Admin(app, name='flaskBlog', template_mode='bootstrap3')
+admin.add_view(ModelView(models.User, db.session))
+admin.add_view(ModelView(models.Post, db.session))
+admin.add_view(ModelView(models.Comment, db.session))
+admin.add_view(ModelView(models.Category, db.session))
 
-@app.route('/admin', methods=['GET', 'POST'])
+# Flask views
+@app.route('/admin/', methods=['GET', 'POST'])
 def admin():
-    return render_template('admin.html')
+    return render_template('admin/index.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -47,11 +54,5 @@ def display_post(post_id):
 
 
 if __name__ == '__main__':
-    # Admin settings models
-    admin = Admin(app, name='flaskBlog', template_mode='bootstrap3')
-    admin.add_view(ModelView(models.User, db.session))
-    admin.add_view(ModelView(models.Post, db.session))
-    admin.add_view(ModelView(models.Comment, db.session))
-    admin.add_view(ModelView(models.Category, db.session))
 
     app.run()
