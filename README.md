@@ -1,6 +1,10 @@
 # flaskBlog
 A simply blog create with Flask (work in progress)
 
+[TODO]
+- Add flask-security ext 
+- ...
+
 ###Try it yourself !
 ####Environment
 1) Clone the repository
