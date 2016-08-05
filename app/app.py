@@ -15,7 +15,6 @@ db = SQLAlchemy(app)
 
 import api
 import models
-<<<<<<< HEAD
 
 # Admin settings models
 admin = Admin(app, name='flaskBlog', template_mode='bootstrap3')
@@ -28,7 +27,6 @@ admin.add_view(ModelView(models.Category, db.session))
 @app.route('/admin/', methods=['GET', 'POST'])
 def admin():
     return render_template('admin/index.html')
-=======
 
 # Create customized model view class
 class MyModelView(sqla.ModelView):
@@ -59,7 +57,6 @@ class MyModelView(sqla.ModelView):
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     return render_template('index.html')
->>>>>>> 1c0f406646b0c0631778c0ad9dedf6fd2043fa02
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -100,8 +97,6 @@ def security_context_processor():
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-=======
 
     # Add model views
     admin.add_view(MyModelView(models.User, db.session))
@@ -109,6 +104,5 @@ if __name__ == '__main__':
     admin.add_view(MyModelView(models.Post, db.session))
     admin.add_view(MyModelView(models.Comment, db.session))
     admin.add_view(MyModelView(models.Category, db.session))
->>>>>>> 1c0f406646b0c0631778c0ad9dedf6fd2043fa02
 
     app.run()
